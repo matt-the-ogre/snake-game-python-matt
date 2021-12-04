@@ -1,6 +1,7 @@
 # Import the Turtle Graphics and random modules
 import turtle
 import random
+import time
 
 # Define program constants
 SEGMENT_SIZE = 20
@@ -9,8 +10,10 @@ STARTING_FOOD = 5
 step_size = 5
 WIDTH = 1920 # * SEGMENT_SIZE
 HEIGHT = 1080 # * SEGMENT_SIZE
-DELAY = int(1000/60)  # Milliseconds (the divisor is frames per second)
+DELAY = int(1000/30)  # Milliseconds (the divisor is frames per second)
 FOOD_SIZE = SEGMENT_SIZE / 2
+quit_next = False
+last_frame_time = time.time()
 
 offsets = {
     "up": (0, step_size),
@@ -44,9 +47,19 @@ def set_snake_direction(direction):
 
 
 def stop_game():
-    turtle.bye()
+    global quit_next
+    quit_next = True
 
 def game_loop():
+    if quit_next:
+        turtle.bye()
+        return
+
+    global last_frame_time
+    this_time = time.time()
+    frame_delta = this_time - last_frame_time
+    last_frame_time = this_time
+
     stamper.clearstamps()  # Remove existing stamps made by stamper.
     food.clearstamps()
 
@@ -77,7 +90,7 @@ def game_loop():
             food.stamp()
 
         # Refresh screen
-        screen.title(f"Snake Game. Score: {score} Speed: {step_size}")
+        screen.title(f"Snake Game. Score: {score} Speed: {step_size} Requested game speed: {DELAY}ms Actual game speed {int(frame_delta * 1000)}ms")
         screen.update()
 
         # Rinse and repeat
