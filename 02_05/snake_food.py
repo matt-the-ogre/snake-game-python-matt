@@ -3,16 +3,17 @@ import turtle
 import random
 
 # Define program constants
-WIDTH = 500
-HEIGHT = 500
-DELAY = 100  # Milliseconds
-FOOD_SIZE = 10
+SEGMENT_SIZE = 10
+WIDTH = 192 * SEGMENT_SIZE
+HEIGHT = 108 * SEGMENT_SIZE
+DELAY = int(1000/10)  # Milliseconds (the divisor is frames per second)
+FOOD_SIZE = SEGMENT_SIZE / 2
 
 offsets = {
-    "up": (0, 20),
-    "down": (0, -20),
-    "left": (-20, 0),
-    "right": (20, 0)
+    "up": (0, SEGMENT_SIZE),
+    "down": (0, -SEGMENT_SIZE),
+    "left": (-SEGMENT_SIZE, 0),
+    "right": (SEGMENT_SIZE, 0)
 }
 
 
@@ -39,6 +40,8 @@ def go_left():
     if snake_direction != "right":
         snake_direction = "left"
 
+def stop_game():
+    turtle.bye()
 
 def game_loop():
     stamper.clearstamps()  # Remove existing stamps made by stamper.
@@ -73,7 +76,7 @@ def game_loop():
 
 def food_collision():
     global food_pos
-    if get_distance(snake[-1], food_pos) < 20:
+    if get_distance(snake[-1], food_pos) < SEGMENT_SIZE:
         food_pos = get_random_food_pos()
         food.goto(food_pos)
         return True
@@ -106,14 +109,16 @@ screen.onkey(go_up, "Up")
 screen.onkey(go_right, "Right")
 screen.onkey(go_down, "Down")
 screen.onkey(go_left, "Left")
+screen.onkey(stop_game, "q")
 
 # Create a turtle to do your bidding
 stamper = turtle.Turtle()
 stamper.shape("square")
+stamper.shapesize(SEGMENT_SIZE / 20)
 stamper.penup()
 
 # Create snake as a list of coordinate pairs.
-snake = [[0, 0], [20, 0], [40, 0], [60, 0]]
+snake = [[0, 0], [SEGMENT_SIZE, 0], [SEGMENT_SIZE * 2, 0], [SEGMENT_SIZE * 3, 0]]
 snake_direction = "up"
 
 # Draw snake for the first time.
@@ -125,7 +130,7 @@ for segment in snake:
 food = turtle.Turtle()
 food.shape("circle")
 food.color("red")
-food.shapesize(FOOD_SIZE / 20)
+food.shapesize(FOOD_SIZE / SEGMENT_SIZE)
 food.penup()
 food_pos = get_random_food_pos()
 food.goto(food_pos)

@@ -2,15 +2,16 @@
 import turtle
 
 # Define program constants
-WIDTH = 500
-HEIGHT = 500
-DELAY = 100  # Milliseconds
+SEGMENT_SIZE = 10
+WIDTH = 192 * SEGMENT_SIZE
+HEIGHT = 108 * SEGMENT_SIZE
+DELAY = int(1000/60)  # Milliseconds
 
 offsets = {
-    "up": (0, 20),
-    "down": (0, -20),
-    "left": (-20, 0),
-    "right": (20, 0)
+    "up": (0, SEGMENT_SIZE),
+    "down": (0, -SEGMENT_SIZE),
+    "left": (-SEGMENT_SIZE, 0),
+    "right": (SEGMENT_SIZE, 0)
 }
 
 
@@ -80,10 +81,11 @@ screen.onkey(go_left, "Left")
 # Create a turtle to do your bidding
 stamper = turtle.Turtle()
 stamper.shape("square")
+stamper.shapesize(SEGMENT_SIZE / 20)
 stamper.penup()
 
 # Create snake as a list of coordinate pairs.
-snake = [[0, 0], [20, 0], [40, 0], [60, 0]]
+snake = [[0, 0], [SEGMENT_SIZE * 1, 0], [SEGMENT_SIZE * 2, 0], [SEGMENT_SIZE * 3, 0]]
 snake_direction = "up"
 
 # Draw snake for the first time.
